@@ -26,4 +26,9 @@ public interface EmployeeMapper {
 
     //分页查询
     Page<Employee> pageQuary(EmployeePageQueryDTO employeePageQueryDTO);
+    //员工账号启用禁用
+    void update(Employee employee);
+    //根据id查询员工信息
+    @Select("select * from employee where id = #{id}")
+    Employee getById(long id);
 }
