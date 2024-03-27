@@ -90,8 +90,6 @@ public class DishServiceImpl implements DishService {
         dishMapper.deleteByIds(ids);
         //根据菜品id集合批量删除关联口味数据
         dishFlavorMapper.deleteByDishIds(ids);
-
-
     }
     //根据id查询菜品和对应口味
 
@@ -110,7 +108,7 @@ public class DishServiceImpl implements DishService {
     //修改菜品信息
     public void updateWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
-        BeanUtils.copyProperties(dishDTO,dish);
+        BeanUtils.copyProperties(dishDTO, dish);
         //修改菜品基本信息
         dishMapper.update(dish);
         //删除原有的口味数据
@@ -125,8 +123,10 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
     }
+
     /**
      * 根据分类id查询菜品
+     *
      * @param categoryId
      * @return
      */
