@@ -35,5 +35,7 @@ public interface DishMapper {
     void deleteById(Long id);
     //根据菜品id集合批量删除菜品数据
     void deleteByIds(List<Long> ids);
-
+    //根据id修改菜品基本信息
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
 }
