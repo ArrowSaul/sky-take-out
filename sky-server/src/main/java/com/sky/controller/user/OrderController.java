@@ -59,6 +59,15 @@ public class OrderController {
         log.info("历史订单查询");
         PageResult pageResult = orderService.pageQuery(page, pageSize, status);
         return Result.success(pageResult);
+
+
+}
+    @PutMapping("/cancel/{id}")
+    @ApiOperation("取消订单")
+    public Result cancel(@PathVariable("id") Long id)throws Exception{
+        log.info("取消订单");
+        orderService.cancel(id);
+        return Result.success();
     }
 
 }
