@@ -321,25 +321,25 @@ public class OrderServiceImpl implements OrderService {
         // 将该订单对应的所有菜品信息拼接在一起
         return String.join("", orderDishList);
     }
-//    /**
-//     * 各状态订单数量统计
-//     * @return
-//     */
-//    public OrderStatisticsVO statistics() {
-//        // 根据状态，分别查询出待接单、待派送、派送中的订单数量
-//        Integer confirmed = orderMapper.countStatus(Orders.TO_BE_CONFIRMED);
-//        Integer deliveryInProgress = orderMapper.countStatus(Orders.DELIVERY_IN_PROGRESS);
-//        Integer toBeConfirmed = orderMapper.countStatus(Orders.COMPLETED);
-////        OrderStatisticsVO orderStatisticsVO = OrderStatisticsVO.builder()
-////                .toBeConfirmed(confirmed)
-////                .deliveryInProgress(deliveryInProgress)
-////                .toBeConfirmed(toBeConfirmed)
-////                .build();
-//        // 将查询出的数据封装到orderStatisticsVO中响应
-//        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
-//        orderStatisticsVO.setToBeConfirmed(toBeConfirmed);
-//        orderStatisticsVO.setConfirmed(confirmed);
-//        orderStatisticsVO.setDeliveryInProgress(deliveryInProgress);
-//        return orderStatisticsVO;
-//    }
+    /**
+     * 各状态订单数量统计
+     * @return
+     */
+    public OrderStatisticsVO statistics() {
+        // 根据状态，分别查询出待接单、待派送、派送中的订单数量
+        Integer confirmed = orderMapper.countStatus(Orders.TO_BE_CONFIRMED);
+        Integer deliveryInProgress = orderMapper.countStatus(Orders.DELIVERY_IN_PROGRESS);
+        Integer toBeConfirmed = orderMapper.countStatus(Orders.COMPLETED);
+//        OrderStatisticsVO orderStatisticsVO = OrderStatisticsVO.builder()
+//                .toBeConfirmed(confirmed)
+//                .deliveryInProgress(deliveryInProgress)
+//                .toBeConfirmed(toBeConfirmed)
+//                .build();
+        // 将查询出的数据封装到orderStatisticsVO中响应
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        orderStatisticsVO.setToBeConfirmed(toBeConfirmed);
+        orderStatisticsVO.setConfirmed(confirmed);
+        orderStatisticsVO.setDeliveryInProgress(deliveryInProgress);
+        return orderStatisticsVO;
+    }
 }

@@ -62,9 +62,9 @@ public interface OrderService {
      * @return
      */
     PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
-//    /**
-//     * 各状态订单数量统计
-//     * @return
-//     */
-//    OrderStatisticsVO statistics();
+    /**
+     * 各状态订单数量统计
+     * @return
+     */
+    OrderStatisticsVO statistics();
 }

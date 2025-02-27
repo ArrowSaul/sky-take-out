@@ -37,15 +37,15 @@ public class OrderController {
         return Result.success(pageResult);
     }
 
-//    /**
-//     * 各状态订单数量统计
-//     * @return
-//     */
-//    @GetMapping("/statistics")
-//    @ApiOperation("各状态订单数量统计")
-//    public Result<OrderStatisticsVO> statistics() {
-//        log.info("各状态订单数量统计");
-//        OrderStatisticsVO orderStatisticsVO = orderService.statistics();
-//        return Result.success(orderStatisticsVO);
-//    }
+    /**
+     * 各状态订单数量统计
+     * @return
+     */
+    @GetMapping("/statistics")
+    @ApiOperation("各状态订单数量统计")
+    public Result<OrderStatisticsVO> statistics() {
+        log.info("各状态订单数量统计");
+        OrderStatisticsVO orderStatisticsVO = orderService.statistics();
+        return Result.success(orderStatisticsVO);
+    }
 }
