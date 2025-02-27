@@ -159,6 +159,7 @@ public class OrderServiceImpl implements OrderService {
     }
     /**
      * 用户端订单分页查询
+     *
      * @param pageNum
      * @param pageSize
      * @param status
@@ -167,12 +168,17 @@ public class OrderServiceImpl implements OrderService {
     public PageResult pageQuery(int pageNum, int pageSize, Integer status) {
         // 设置分页
         PageHelper.startPage(pageNum, pageSize);
+
         OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
         ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
         ordersPageQueryDTO.setStatus(status);
+
         // 分页条件查询
         Page<Orders> page = orderMapper.pageQuery(ordersPageQueryDTO);
+
         List<OrderVO> list = new ArrayList();
+
+        // 查询出订单明细，并封装入OrderVO进行响应
         if (page != null && page.getTotal() > 0) {
             for (Orders orders : page) {
                 Long orderId = orders.getId();// 订单id
@@ -183,6 +189,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderVO orderVO = new OrderVO();
                 BeanUtils.copyProperties(orders, orderVO);
                 orderVO.setOrderDetailList(orderDetails);
+
                 list.add(orderVO);
             }
         }
@@ -205,19 +212,18 @@ public class OrderServiceImpl implements OrderService {
         }
         Orders orders =new Orders();
         orders.setId(ordersDB.getId());
-//        // 订单处于待接单状态下取消，需要进行退款
-//        if (ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
-//            //调用微信支付退款接口
-//            weChatPayUtil.refund(
-//                    ordersDB.getNumber(), //商户订单号
-//                    ordersDB.getNumber(), //商户退款单号
-//                    new BigDecimal(0.01), //退款金额，单位 元
-//                    new BigDecimal(0.01) //原订单金额
-//            );
-//            //支付状态修改为 退款
-//            orders.setPayStatus(Orders.REFUND);
-//        }
-
+        // 订单处于待接单状态下取消，需要进行退款
+        if (ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+            //调用微信支付退款接口
+            weChatPayUtil.refund(
+                    ordersDB.getNumber(), //商户订单号
+                    ordersDB.getNumber(), //商户退款单号
+                    new BigDecimal(0.01), //退款金额，单位 元
+                    new BigDecimal(0.01) //原订单金额
+            );
+            //支付状态修改为 退款
+            orders.setPayStatus(Orders.REFUND);
+        }
         // 更新订单状态、取消原因、取消时间
         orders.setStatus(Orders.CANCELLED);
         orders.setCancelReason("用户取消");
