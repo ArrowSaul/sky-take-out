@@ -479,4 +479,23 @@ public class OrderServiceImpl implements OrderService {
         orders.setDeliveryTime(LocalDateTime.now());
         orderMapper.update(orders);
     }
+    /**
+     * 客户催单
+     * @param id
+     * @return
+     */
+    public void reminder(Long id) {
+        // 根据id查询订单
+        Orders ordersDB = orderMapper.getById(id);
+
+        // 校验订单是否存在，并且状态为4
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        HashMap map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号："+ordersDB.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+    }
 }
