@@ -13,6 +13,7 @@ import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
+import com.sky.result.Result;
 import com.sky.service.AddressBookService;
 import com.sky.service.DishService;
 import com.sky.service.OrderService;
@@ -21,17 +22,21 @@ import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -232,4 +237,38 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setOrderDetailList(orderDetailList);
         return orderVO;
     }
+    /**
+     * 再来一单
+     * @param id
+     * @return
+     */
+    public void repetition(Long id) {
+        // 获取当前用户id
+        Long userId = BaseContext.getCurrentId();
+        List<ShoppingCart> shoppingCartList = new ArrayList();
+        // 根据订单id查询订单明细
+        List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(id);
+        // 将订单明细对象转换为购物车对象
+        for (OrderDetail orderDetail : orderDetailList) {
+            ShoppingCart shoppingCart = new ShoppingCart();
+            BeanUtils.copyProperties(orderDetail, shoppingCart);
+            shoppingCart.setUserId(userId);
+            shoppingCart.setCreateTime(LocalDateTime.now());
+            shoppingCartList.add(shoppingCart);
+        }
+//        // 将订单详情对象转换为购物车对象
+//        List<ShoppingCart> shoppingCartList = orderDetailList.stream().map(x -> {
+//            ShoppingCart shoppingCart = new ShoppingCart();
+//
+//            // 将原订单详情里面的菜品信息重新复制到购物车对象中
+//            BeanUtils.copyProperties(x, shoppingCart, "id");
+//            shoppingCart.setUserId(userId);
+//            shoppingCart.setCreateTime(LocalDateTime.now());
+//
+//            return shoppingCart;
+//        }).collect(Collectors.toList());
+        shoppingCartMapper.insertBatch(shoppingCartList);
+    }
+
+
 }
